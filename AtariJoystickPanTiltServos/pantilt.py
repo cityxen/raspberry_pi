@@ -1,47 +1,47 @@
-# Atari Joystick servo controller hack by Seth Parson
+#######################################################################################
+# Atari Joystick servo controller hack by Deadline
+#
+# 2019 CityXen
+#
 # https://github.com/adafruit/Adafruit_Python_PCA9685
 # Credit to Chris Swan https://github.com/cpswan/Python/blob/master/rpi-gpio-jstk.py
+#
+# Reference:
 # http://old.pinouts.ru/Inputs/JoystickAtari2600_pinout.shtml
+#
 # Joystick to GPIO pinout
-#1 Up -> 11 (GPIO 17)
-#2 Down -> 13 (GPIO 22)
-#3 Left -> 15 (GPIO 23)
-#4 Right -> 16 (GPIO 24)
-#5 n/c
-#6 Fire -> 7 (GPIO 4)
-#7 n/c
-#8 GND
-#9 n/c
-
+# 1 Up     -> 11 (GPIO 17)
+# 2 Down   -> 13 (GPIO 22)
+# 3 Left   -> 15 (GPIO 23)
+# 4 Right  -> 16 (GPIO 24)
+# 5 n/c
+# 6 Fire   -> 7  (GPIO 4)
+# 7 n/c
+# 8 GND
+# 9 n/c
+#
+#######################################################################################
 from __future__ import division
 import time
 import Adafruit_PCA9685
-#import uinput
 import RPi.GPIO as GPIO
-#import logging
-#logging.basicConfig(level=logging.DEBUG)
-
 print('Initializing...')
-
 # Servo initialization stuff
 pwm = Adafruit_PCA9685.PCA9685() #pwm = Adafruit_PCA9685.PCA9685(address=0x41, busnum=2)
 # Configure min and max servo pulse lengths
 servo_min = 150 # 150 # Min pulse length out of 4096
 servo_max = 600 # 600 # Max pulse length out of 4096
 pwm.set_pwm_freq(60)# Set frequency to 60hz, good for servos.
-
 # GPIO initialization stuff
 GPIO.setmode(GPIO.BOARD) # Up, Down, left, right, fire
 chan_list = [7,11,13,15,16]
 GPIO.setup(chan_list, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-
 # Joystick initialization stuff
 fire  = False
 up    = False
 down  = False
 left  = False
 right = False
-
 # Helper function to make setting a servo pulse width simpler.
 def set_servo_pulse(channel, pulse):
     pulse_length = 1000000    # 1,000,000 us per second
@@ -55,14 +55,14 @@ def set_servo_pulse(channel, pulse):
 
 def readJoystick():
     global fire
+    fire = False
     global up
+    up = False
     global down
+    down = False
     global left
+    left = False
     global right
-    fire  = False
-    up    = False
-    down  = False
-    left  = False
     right = False
     if(not(GPIO.input(7))):
         fire  = True
@@ -114,4 +114,4 @@ while True:
     pwm.set_pwm(0,0,x)
     pwm.set_pwm(1,0,y)
     pwm.set_pwm(2,0,z)
-    time.sleep(.02)   
+    time.sleep(.02)
